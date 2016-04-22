@@ -1,2 +1,23 @@
 hello wrold
 This is add info
+
+when
+ssh: connect to host github.com port 22: Connection refused
+fatal: Could not read from remote repository.
+
+use
+
+[fulinux@ubuntu ~]$ vim .ssh/config
+
+Host github.com
+User fulinux@sina.com
+Hostname ssh.github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_rsa
+Port 443
+
+
+check
+[fulinux@ubuntu ~]$ ssh -T git@github.com
+Hi fulinux! You've successfully authenticated, but GitHub does not provide shell access.
+
