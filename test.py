@@ -32,7 +32,7 @@ class Role_Sprit(pygame.sprite.Sprite):
                 if x== (col-1):
                     rect[directionlist[y]]=temp
                     temp = [] 
-        print   rect
+ #     print   rect
         return  rect
 
     def update(self,direction,passed_time):
@@ -53,7 +53,7 @@ class Role(object):
         self.runsprit   = runsprit
         self.sprit      = staysprit
 #        self.surface    = surface
-        self.location   = Vector2(400,300)
+        self.location   = Vector2(1584,1312)
         self.destination= Vector2(0,0)
         self.direction  = 'DownLeft'
         self.state      = 'stay'
@@ -63,7 +63,8 @@ class Role(object):
             self.sprit  = self.staysprit
         else:
             self.sprit  = self.runsprit
-        x,y=self.location
+  #      x,y=self.location
+        x,y=(400,300)
         screen.blit(self.sprit.surface,(x-self.sprit.width/2,y-self.sprit.height/2),self.sprit.rect)
 
     def process(self,destination,passed_time):
@@ -92,47 +93,55 @@ class Role(object):
             self.state    = 'stay'
             self.staysprit.update(self.direction,passed_time)
             
-                            
-pygame.init()
+def main():
+    pygame.init()
+    disSize = (800,600)
+    disRect = Rect((0,0),disSize)
+    screen  = pygame.display.set_mode(disSize,0,32)
+    pygame.display.set_caption("hello world!")
+    homedir = getcwd()
+    print homedir
+    bgSurface = pygame.image.load(homedir+'/pic/bg.jpg').convert()
+    bgSurfaceRect  = bgSurface.get_rect()
+    disRect.center = bgSurfaceRect.center
+    print disRect.center
+    print disRect
+    
+    spritSurface=pygame.image.load(homedir+'/pic/sprit.png').convert_alpha()
 
-screen  = pygame.display.set_mode((800,600),0,32)
-pygame.display.set_caption("hello world!")
-homedir = getcwd()
-print homedir
-bg = pygame.image.load(homedir+'/pic/bg.jpg').convert()
-spritSurface=pygame.image.load(homedir+'/pic/sprit.png').convert_alpha()
-#getrect(spritSurface,4,8)
-spritRunSurface=pygame.image.load(homedir+'/pic/sprit_run.png').convert_alpha()
-stay =  Role_Sprit(spritSurface,4,8)
-run  =  Role_Sprit(spritRunSurface,4,8)
-role =  Role(stay,run)
+    spritRunSurface=pygame.image.load(homedir+'/pic/sprit_run.png').convert_alpha()
+    stay    =  Role_Sprit(spritSurface,4,8)
+    run     =  Role_Sprit(spritRunSurface,4,8)
+    role    =  Role(stay,run)
 
+    clock  =  pygame.time.Clock()
+#    pos     =role.location
+    bgPos =  bgSurfaceRect.center
+    while True:
+        for event in pygame.event.get():
+            if event.type ==QUIT:
+                pygame.quit()
+                exit()
+            if event.type == MOUSEBUTTONDOWN:
+#                print event.pos
+#                pos=event.pos
+                print disRect.topleft
+                temp    = [1,1]
+                temp[0] = event.pos[0]+disRect.topleft[0]
+                temp[1] = event.pos[1]+disRect.topleft[1]
+                bgPos   = temp
+                print bgPos
+        time = clock.tick()
+        
+        screen.blit(bgSurface,(0,0),disRect)
+#        role.process(pos,time)
+        role.process(bgPos,time)
+        role.render(screen)
+        disRect.center  =  role.location
 
-#RED=(255,0,0)
-#ll.set_colorkey(RED)
-clock= pygame.time.Clock()
-pos=role.location
-while True:
-    for event in pygame.event.get():
-        if event.type ==QUIT:
-            pygame.quit()
-            exit()
-        if event.type == MOUSEBUTTONDOWN:
-            print event.pos
-            pos=event.pos
-    time = clock.tick()
-#    stay.update('UpLeft',time)
-#    run.update('UpLeft',time)
-    screen.blit(bg,(0,0))
-    role.process(pos,time)
-    role.render(screen)
-#    screen.blit(stay.surface,(300,300),stay.rect)
-#    screen.blit(run.surface,(400,300),run.rect)
+        pygame.display.update()
 
-
-    pygame.display.update()
-#    raw_input()
-#    clock.tick(10)
-#    pygame.display.set_caption("fps:"+str(clock.get_fps()))
+if __name__=='__main__':
+    main()
     
     
